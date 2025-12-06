@@ -155,13 +155,17 @@ class _CameraPageState extends State<CameraPage> {
       _updateStatus('MRZ Detected, Parsing...');
     };
 
-    controller.onParsed = (result) async {
+    controller.onParsed = (parsedResult) async {
       if (isParsed) {
         return;
       }
-
       try {
+        // test takePhoto
+        // final photo = await controller.takePhoto();
+        // print('photo: $photo');
+
         isParsed = true;
+        final result = parsedResult.mrzResult;
 
         await showDialog<void>(
           context: context,
@@ -170,6 +174,7 @@ class _CameraPageState extends State<CameraPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  Text('MRZ: ${parsedResult.mrz}'),
                   Text('Document type: ${result.documentType}'),
                   Text('Country: ${result.countryCode}'),
                   Text('Surnames: ${result.surnames}'),
@@ -198,6 +203,7 @@ class _CameraPageState extends State<CameraPage> {
 
         // Reset status after parsing is complete
         _updateStatus('');
+        return;
       } catch (e, stackTrace) {
         // Log the error and reset the state
         debugPrint('Error during parsing: $e');
